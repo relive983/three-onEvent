@@ -182,7 +182,7 @@ listenerList.click = function (targetList,camera) {
 }
 // object3d on mouse hover
 listenerList.hover = function (targetList,camera) {
-	var targetObject,obj,Hover = false;
+	var targetObject,obj,Hover = false,lastIntersectsObjectID;
 	var Mouse = new THREE.Raycaster();
 	window.addEventListener('mousemove',function(event) {
 		event.preventDefault();
@@ -194,6 +194,15 @@ listenerList.hover = function (targetList,camera) {
 	    var intersects = Mouse.intersectObjects(list);
 	    
 	    if (intersects.length > 0) {
+		    
+	    	if(lastIntersectsObjectID != intersects[0].object.id) {
+			if(Hover && !!obj.callback[1]) {
+				obj.callback[1](targetObject);
+			}
+			Hover = false;
+			lastIntersectsObjectID = intersects[0].id;
+		}
+		    
 	    	if (Hover) return;
 	    	Hover = true;
 	      	targetObject = intersects[0].object;
